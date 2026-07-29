@@ -1,0 +1,165 @@
+{
+  "schema": "raghav.it/journey/v1",
+  "meta": {
+    "authored_by": "raghav",
+    "authored_at": "2026-07-30",
+    "source_repo": "",
+    "notes": "ChaiCode React Tic Tac Toe \u2014 local + PartyKit play rooms. Hosted on raghav.it games hub."
+  },
+  "project": {
+    "id": "tic_tac_toe",
+    "name": "Tic Tac Toe",
+    "year": "2026",
+    "short": "React Tic Tac Toe with local play and inviteable online rooms.",
+    "desc": "Classic X/O on 3\u00d73\u20135\u00d75 boards with win/draw detection and reset. Same-device play by default; Play room creates a shareable PartyKit room so a friend joins as O.",
+    "status": "live",
+    "url": "https://raghav.it/games/tic-tac-toe/",
+    "repo": "",
+    "icon": "si:react",
+    "hue": "indigo",
+    "features": [
+      {
+        "id": "local_board",
+        "label": "Local two-player board",
+        "desc": "Turn-based X/O with win line, draw, and reset.",
+        "uses": {
+          "skill": [
+            "fe"
+          ],
+          "tech": [
+            "react",
+            "vite",
+            "tailwind"
+          ]
+        }
+      },
+      {
+        "id": "variable_board",
+        "label": "Variable board size",
+        "desc": "3\u00d73, 4\u00d74, and 5\u00d75 with N-in-a-row wins.",
+        "uses": {
+          "skill": [
+            "fe"
+          ],
+          "tech": [
+            "react"
+          ]
+        }
+      },
+      {
+        "id": "play_rooms",
+        "label": "Online play rooms",
+        "desc": "Create/join via link or code; host X, guest O; authoritative PartyKit state.",
+        "uses": {
+          "skill": [
+            "fe"
+          ],
+          "tech": [
+            "react",
+            "partykit"
+          ],
+          "integration": [
+            "partykit"
+          ]
+        }
+      }
+    ]
+  },
+  "parent_milestone_id": "now",
+  "skills": [
+    {
+      "id": "fe",
+      "name": "Frontend",
+      "existing": true
+    },
+    {
+      "id": "gamedev",
+      "name": "Game Dev",
+      "existing": true
+    }
+  ],
+  "tech": [
+    {
+      "id": "react",
+      "name": "React",
+      "icon": "si:react",
+      "existing": true
+    },
+    {
+      "id": "vite",
+      "name": "Vite",
+      "icon": "si:vite",
+      "existing": true
+    },
+    {
+      "id": "tailwind",
+      "name": "Tailwind CSS",
+      "icon": "si:tailwindcss",
+      "existing": true
+    },
+    {
+      "id": "partykit",
+      "name": "PartyKit",
+      "icon": "si:cloudflare",
+      "existing": false
+    }
+  ],
+  "integrations": [
+    {
+      "id": "partykit",
+      "name": "PartyKit",
+      "desc": "Realtime play rooms on Cloudflare.",
+      "existing": false
+    }
+  ],
+  "courses": [
+    {
+      "id": "chaicode_webdev",
+      "name": "ChaiCode Web Dev",
+      "year": "2026",
+      "desc": "React Tic Tac Toe assignment."
+    }
+  ],
+  "incidents": [],
+  "learnings": [
+    {
+      "id": "authoritative_room_state",
+      "name": "Authoritative room state",
+      "year": "2026",
+      "desc": "Validate moves on the PartyKit server so clients cannot cheat turn order."
+    }
+  ],
+  "carried_forward": [],
+  "links": [
+    {
+      "to": "react",
+      "kind": "uses"
+    },
+    {
+      "to": "vite",
+      "kind": "uses"
+    },
+    {
+      "to": "tailwind",
+      "kind": "uses"
+    },
+    {
+      "to": "partykit",
+      "kind": "uses"
+    }
+  ],
+  "core_events": [
+    {
+      "type": "project",
+      "year": "2026",
+      "name": "Tic Tac Toe",
+      "desc": "Local React board plus PartyKit play rooms."
+    },
+    {
+      "type": "learning",
+      "year": "2026",
+      "name": "Authoritative room state",
+      "desc": "Validate moves on the PartyKit server so clients cannot cheat turn order."
+    }
+  ]
+}
