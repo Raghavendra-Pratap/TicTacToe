@@ -3,7 +3,7 @@
 A two-player Tic Tac Toe game built with **React** and **Tailwind CSS**. Play locally on one device, or open **Play room** to invite a friend with a link or room code (PartyKit).
 
 **Live (raghav.it):** https://raghav.it/games/tic-tac-toe/  
-**Source:** _add public GitHub URL after push_
+**Source:** https://github.com/Raghavendra-Pratap/TicTacToe
 
 ## Assignment brief
 
@@ -19,7 +19,7 @@ Build a Tic Tac Toe game using React with a clean interactive UI (CSS or Tailwin
 | Reset game | Done |
 | Clear visual feedback (turn + result) | Done |
 | Live hosted link | https://raghav.it/games/tic-tac-toe/ |
-| Public GitHub repository link | _fill after `git push`_ |
+| Public GitHub repository link | https://github.com/Raghavendra-Pratap/TicTacToe |
 
 See [SUBMISSION.md](./SUBMISSION.md) for the submit checklist and links.
 

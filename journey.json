@@ -3,7 +3,7 @@
   "meta": {
     "authored_by": "raghav",
     "authored_at": "2026-07-30",
-    "source_repo": "",
+    "source_repo": "https://github.com/Raghavendra-Pratap/TicTacToe",
     "notes": "ChaiCode React Tic Tac Toe \u2014 local + PartyKit play rooms. Hosted on raghav.it games hub."
   },
   "project": {
@@ -14,7 +14,7 @@
     "desc": "Classic X/O on 3\u00d73\u20135\u00d75 boards with win/draw detection and reset. Same-device play by default; Play room creates a shareable PartyKit room so a friend joins as O.",
     "status": "live",
     "url": "https://raghav.it/games/tic-tac-toe/",
-    "repo": "",
+    "repo": "https://github.com/Raghavendra-Pratap/TicTacToe",
     "icon": "si:react",
     "hue": "indigo",
     "features": [

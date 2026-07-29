@@ -26,7 +26,7 @@ Extras shipped beyond the brief:
 | Field | Link |
 |---|---|
 | **Live hosted link** | https://raghav.it/games/tic-tac-toe/ |
-| **Public GitHub repository** | _paste URL after the repo is public_ |
+| **Public GitHub repository** | https://github.com/Raghavendra-Pratap/TicTacToe |
 
 ## How to verify
 
