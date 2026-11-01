@@ -1,16 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import PartySocket from 'partysocket'
-import { partyHost } from './roomCode'
+import { playRoomUrl } from './roomCode'
 
 const INITIAL = {
   connected: false,
   error: null,
+  notice: null,
   roomId: null,
   boardSize: 3,
   squares: null,
   xIsNext: true,
   status: { type: 'playing', currentPlayer: 'X' },
   myRole: null,
+  inLobby: false,
+  inQueue: false,
+  watchingOnly: false,
+  queuePosition: null,
+  queueCount: 0,
+  lobbyCount: 0,
+  queueFull: false,
+  series: { X: 0, O: 0 },
+  seatRoomWins: { X: 0, O: 0 },
+  myRoomWins: 0,
+  scores: { X: 0, O: 0 },
   hostPresent: false,
   guestPresent: false,
   waitingForOpponent: true,
@@ -30,11 +41,8 @@ export function useRoom(roomCode) {
 
     setState((prev) => ({ ...INITIAL, roomId: roomCode, error: prev.error }))
 
-    const socket = new PartySocket({
-      host: partyHost(),
-      room: roomCode,
-      party: 'main',
-    })
+    const url = playRoomUrl(roomCode)
+    const socket = new WebSocket(url)
     socketRef.current = socket
 
     function onOpen() {
@@ -50,6 +58,14 @@ export function useRoom(roomCode) {
       }
 
       if (data.type === 'error') {
+        // Soft errors (queue full) stay connected
+        if (data.code === 'QUEUE_FULL') {
+          setState((prev) => ({
+            ...prev,
+            notice: data.message || 'Player queue is full.',
+          }))
+          return
+        }
         setState((prev) => ({
           ...prev,
           error: data.message || 'Could not join room',
@@ -59,15 +75,28 @@ export function useRoom(roomCode) {
       }
 
       if (data.type === 'state') {
+        const series = data.series || data.scores || { X: 0, O: 0 }
         setState({
           connected: true,
           error: null,
+          notice: null,
           roomId: data.roomId,
           boardSize: data.boardSize,
           squares: data.squares,
           xIsNext: data.xIsNext,
           status: data.status,
           myRole: data.myRole,
+          inLobby: Boolean(data.inLobby),
+          inQueue: Boolean(data.inQueue),
+          watchingOnly: Boolean(data.inLobby || data.watchingOnly),
+          queuePosition: data.queuePosition ?? null,
+          queueCount: data.queueCount ?? 0,
+          lobbyCount: data.lobbyCount ?? 0,
+          queueFull: Boolean(data.queueFull),
+          series,
+          seatRoomWins: data.seatRoomWins || { X: 0, O: 0 },
+          myRoomWins: data.myRoomWins ?? 0,
+          scores: series,
           hostPresent: data.hostPresent,
           guestPresent: data.guestPresent,
           waitingForOpponent: data.waitingForOpponent,
@@ -77,15 +106,7 @@ export function useRoom(roomCode) {
       }
     }
 
-    function onClose(event) {
-      if (event.code === 4000) {
-        setState((prev) => ({
-          ...prev,
-          connected: false,
-          error: prev.error || 'This room already has two players.',
-        }))
-        return
-      }
+    function onClose() {
       setState((prev) => ({ ...prev, connected: false }))
     }
 
@@ -95,7 +116,7 @@ export function useRoom(roomCode) {
         connected: false,
         error:
           prev.error ||
-          'Could not connect to the play room. Is PartyKit running?',
+          'Could not connect to the play room. Check your connection and try again.',
       }))
     }
 
@@ -120,23 +141,24 @@ export function useRoom(roomCode) {
     socket.send(JSON.stringify(payload))
   }, [])
 
-  const play = useCallback(
-    (index) => {
-      send({ type: 'move', index })
-    },
+  const playMove = useCallback(
+    (index) => send({ type: 'move', index }),
     [send],
   )
-
-  const reset = useCallback(() => {
-    send({ type: 'reset' })
-  }, [send])
-
-  const setSize = useCallback(
-    (size) => {
-      send({ type: 'setSize', size })
-    },
+  const resetGame = useCallback(() => send({ type: 'reset' }), [send])
+  const setBoardSize = useCallback(
+    (size) => send({ type: 'setSize', size }),
     [send],
   )
+  const moveToLobby = useCallback(() => send({ type: 'moveToLobby' }), [send])
+  const enterQueue = useCallback(() => send({ type: 'enterQueue' }), [send])
 
-  return { ...state, play, reset, setSize }
+  return {
+    ...state,
+    playMove,
+    resetGame,
+    setBoardSize,
+    moveToLobby,
+    enterQueue,
+  }
 }

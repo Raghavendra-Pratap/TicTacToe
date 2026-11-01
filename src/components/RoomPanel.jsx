@@ -23,13 +23,23 @@ export default function RoomPanel({
   online,
   roomCode,
   myRole,
+  inLobby,
+  inQueue,
+  queuePosition,
+  queueCount,
+  lobbyCount,
+  queueFull,
+  myRoomWins,
   waitingForOpponent,
   opponentLeft,
   connected,
   error,
+  notice,
   onCreateRoom,
   onJoinRoom,
   onLeaveRoom,
+  onMoveToLobby,
+  onEnterQueue,
 }) {
   const [open, setOpen] = useState(false)
   const [code, setCode] = useState('')
@@ -120,6 +130,25 @@ export default function RoomPanel({
                 {myRole}
               </span>
               {myRole === 'X' ? ' (host)' : ' (guest)'}
+              {typeof myRoomWins === 'number' ? (
+                <span className="text-slate-500"> · {myRoomWins} room wins</span>
+              ) : null}
+            </p>
+          )}
+
+          {connected && inQueue && !error && (
+            <p className="text-sm text-amber-400" role="status">
+              In player queue
+              {queuePosition ? ` · #${queuePosition} of ${queueCount}` : ''}
+            </p>
+          )}
+
+          {connected && inLobby && !error && (
+            <p className="text-sm text-slate-400" role="status">
+              In lobby · watching only
+              {typeof myRoomWins === 'number' && myRoomWins > 0
+                ? ` · ${myRoomWins} room wins kept`
+                : ''}
             </p>
           )}
 
@@ -135,18 +164,57 @@ export default function RoomPanel({
             </p>
           )}
 
-          {connected && waitingForOpponent && !error && (
+          {notice && !error && (
+            <p className="text-sm text-amber-400" role="status">
+              {notice}
+            </p>
+          )}
+
+          {connected && myRole && waitingForOpponent && !error && (
             <p className="text-sm text-amber-400" role="status">
               {opponentLeft
-                ? 'Opponent left — waiting to rejoin…'
+                ? 'Opponent left — next in queue will join…'
                 : 'Waiting for opponent…'}
             </p>
           )}
 
-          {connected && !waitingForOpponent && !error && (
+          {connected && myRole && !waitingForOpponent && !error && (
             <p className="text-sm text-emerald-400" role="status">
               Opponent connected
+              {queueCount > 0 ? ` · ${queueCount} in queue` : ''}
+              {lobbyCount > 0 ? ` · ${lobbyCount} in lobby` : ''}
             </p>
+          )}
+
+          {connected && inLobby && (
+            <button
+              type="button"
+              onClick={onEnterQueue}
+              disabled={queueFull}
+              className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {queueFull ? 'Player queue full (20)' : 'Join player queue'}
+            </button>
+          )}
+
+          {connected && inQueue && (
+            <button
+              type="button"
+              onClick={onMoveToLobby}
+              className="w-full rounded-lg bg-slate-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-600"
+            >
+              Leave queue · stay in lobby
+            </button>
+          )}
+
+          {connected && myRole && (
+            <button
+              type="button"
+              onClick={onMoveToLobby}
+              className="w-full rounded-lg bg-slate-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-600"
+            >
+              Move to lobby · keep score
+            </button>
           )}
 
           <button
@@ -216,6 +284,16 @@ export default function RoomPanel({
             {roomCode}
           </span>
         )}
+        {online && inQueue && (
+          <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-amber-300">
+            Queue
+          </span>
+        )}
+        {online && inLobby && (
+          <span className="rounded bg-slate-600/40 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-slate-300">
+            Lobby
+          </span>
+        )}
       </button>
 
       {open &&
@@ -240,7 +318,7 @@ export default function RoomPanel({
         ) : (
           <aside
             id="play-room-panel"
-            className="absolute left-0 top-12 z-30 w-64 rounded-xl bg-slate-900/95 p-4 shadow-xl shadow-black/30 ring-1 ring-slate-800 backdrop-blur"
+            className="absolute left-0 top-12 z-30 w-72 rounded-xl bg-slate-900/95 p-4 shadow-xl shadow-black/30 ring-1 ring-slate-800 backdrop-blur"
           >
             {panelBody}
           </aside>
