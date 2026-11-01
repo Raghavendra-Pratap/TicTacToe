@@ -37,6 +37,21 @@ export function inviteUrlFor(code) {
   return url.toString()
 }
 
+/** WebSocket URL for a room (self-hosted on VPS; local default :1999). */
+export function playRoomUrl(roomCode) {
+  const code = normalizeRoomCode(roomCode)
+  const override = import.meta.env.VITE_PLAY_ROOM_WS
+  if (override) {
+    return `${override.replace(/\/$/, '')}/play/tictactoe/${code}`
+  }
+  if (import.meta.env.DEV) {
+    return `ws://127.0.0.1:1999/play/tictactoe/${code}`
+  }
+  const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  return `${proto}//${window.location.host}/play/tictactoe/${code}`
+}
+
+/** @deprecated PartyKit hosted platform shut down; kept for any leftover imports */
 export function partyHost() {
-  return import.meta.env.VITE_PARTYKIT_HOST || '127.0.0.1:1999'
+  return import.meta.env.VITE_PLAY_ROOM_HOST || window.location.host
 }
